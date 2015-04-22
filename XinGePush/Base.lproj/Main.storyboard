@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -16,9 +16,83 @@
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="fz0-Gy-t1K">
+                                <rect key="frame" x="0.0" y="58" width="320" height="439"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="idCellItem" textLabel="Rxw-Fe-wJc" style="IBUITableViewCellStyleDefault" id="3KQ-vR-G3J">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="3KQ-vR-G3J" id="W90-OQ-0SR">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Rxw-Fe-wJc">
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                            <datePicker hidden="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="JxC-8m-rgR">
+                                <rect key="frame" x="0.0" y="167" width="320" height="216"/>
+                                <date key="date" timeIntervalSinceReferenceDate="451404297.54075199">
+                                    <!--2015-04-22 14:04:57 +0000-->
+                                </date>
+                                <date key="minimumDate" timeIntervalSinceReferenceDate="441802800">
+                                    <!--2015-01-01 11:00:00 +0000-->
+                                </date>
+                                <date key="maximumDate" timeIntervalSinceReferenceDate="631105200">
+                                    <!--2020-12-31 11:00:00 +0000-->
+                                </date>
+                            </datePicker>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C66-li-xLY">
+                                <rect key="frame" x="16" y="500" width="288" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="d9B-gP-Zjo"/>
+                                </constraints>
+                                <state key="normal" title="Button">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="U7r-V4-DDd">
+                                <rect key="frame" x="16" y="20" width="288" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="902-fD-sZ3"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="C66-li-xLY" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="1Ff-Oe-f8j"/>
+                            <constraint firstItem="JxC-8m-rgR" firstAttribute="top" secondItem="U7r-V4-DDd" secondAttribute="bottom" constant="8" id="3Gr-zc-1pa"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="C66-li-xLY" secondAttribute="bottom" constant="8" id="5gz-nH-t0m"/>
+                            <constraint firstItem="C66-li-xLY" firstAttribute="top" secondItem="JxC-8m-rgR" secondAttribute="bottom" constant="8" id="9Nr-FZ-tUC"/>
+                            <constraint firstItem="C66-li-xLY" firstAttribute="trailing" secondItem="kh9-bI-dsS" secondAttribute="trailingMargin" id="9TW-ge-uVq"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="JxC-8m-rgR" secondAttribute="trailing" constant="-16" id="9mF-g7-ArW"/>
+                            <constraint firstItem="C66-li-xLY" firstAttribute="top" secondItem="fz0-Gy-t1K" secondAttribute="bottom" constant="3" id="BOM-Oz-EHI"/>
+                            <constraint firstItem="U7r-V4-DDd" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="DEX-ey-fYb"/>
+                            <constraint firstItem="JxC-8m-rgR" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="-16" id="GEi-Nl-QdI"/>
+                            <constraint firstItem="fz0-Gy-t1K" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="-16" id="OTD-Vo-4cy"/>
+                            <constraint firstItem="U7r-V4-DDd" firstAttribute="trailing" secondItem="kh9-bI-dsS" secondAttribute="trailingMargin" id="Wem-ft-TOq"/>
+                            <constraint firstItem="fz0-Gy-t1K" firstAttribute="top" secondItem="U7r-V4-DDd" secondAttribute="bottom" constant="8" id="jyq-Np-XVy"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="fz0-Gy-t1K" secondAttribute="trailing" constant="-16" id="njm-QJ-dpL"/>
+                            <constraint firstItem="U7r-V4-DDd" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" id="pAI-Fr-S0D"/>
+                        </constraints>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                    <connections>
+                        <outlet property="btnAction" destination="C66-li-xLY" id="tzb-RP-rIe"/>
+                        <outlet property="datePicker" destination="JxC-8m-rgR" id="TTV-fG-ZaW"/>
+                        <outlet property="tblShoppingList" destination="fz0-Gy-t1K" id="WxX-LU-UAS"/>
+                        <outlet property="txtAddItem" destination="U7r-V4-DDd" id="BM2-AR-SaR"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
