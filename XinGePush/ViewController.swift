@@ -37,7 +37,7 @@ class ViewController: UIViewController {
             alert.show()
         }
         
-        XGPush.setTag(tag, successCallback: successBlock, errorCallback: errorBlock)
+        XGPush.setTag(tag as String, successCallback: successBlock, errorCallback: errorBlock)
         
     }
     
@@ -58,7 +58,7 @@ class ViewController: UIViewController {
             alert.show()
         }
         
-        XGPush.delTag(tag, successCallback: successBlock, errorCallback: errorBlock)
+        XGPush.delTag(tag as String, successCallback: successBlock, errorCallback: errorBlock)
     }
     
     

@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             inviteCategory.setActions([acceptAction], forContext: UIUserNotificationActionContext.Default)
             inviteCategory.setActions([acceptAction], forContext: UIUserNotificationActionContext.Minimal)
             var categories: NSSet = NSSet(objects: inviteCategory)
-            var mySettings: UIUserNotificationSettings = UIUserNotificationSettings(forTypes: types, categories: categories)
+            var mySettings: UIUserNotificationSettings = UIUserNotificationSettings(forTypes: types, categories: categories as Set<NSObject>)
             UIApplication.sharedApplication().registerUserNotificationSettings(mySettings)
             UIApplication.sharedApplication().registerForRemoteNotifications()
         }
@@ -95,15 +95,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UIApplication.sharedApplication().cancelAllLocalNotifications()
         XGPush.handleLaunching(launchOptions, successCallback: successBlock, errorCallback: errorBlock)
         
-        //本地推送示例
-//        var fireDate: NSDate = NSDate().dateByAddingTimeInterval(10)
-//        var dicUserInfo: NSMutableDictionary = NSMutableDictionary()
-//        dicUserInfo.setValue("myid", forKey: "clockID")
-//        var userInfo: NSDictionary = dicUserInfo
-//        
-//        XGPush.localNotification(fireDate, alertBody: "测试本地推送", badge: 2, alertAction: "确定", userInfo: userInfo)
-        
-        
         return true
     }
     
@@ -118,10 +109,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             // 失败之后的处理
             println("[XGPush]registerDeviceToken errorBlock")
         }
-        
-        //注册设备
-//        [[XGSetting getInstance] setChannel:@"appstore"];
-//        [[XGSetting getInstance] setGameServer:@"巨神峰"];
         
         var deviceTokenStr: NSString = XGPush.registerDevice(deviceToken, successCallback: successBlock, errorCallback: errorBlock)
         
