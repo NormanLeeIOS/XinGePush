@@ -131,9 +131,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBAction func scheduleReminder(sender: AnyObject) {
         if datePicker.hidden == true {
             animateMyViews(tblShoppingList, viewToShow: datePicker)
+            UIApplication.sharedApplication().cancelAllLocalNotifications()
         }
         else {
             animateMyViews(datePicker, viewToShow: tblShoppingList)
+            scheduleLocalNotification()
         }
         txtAddItem.enabled = !txtAddItem.enabled
     }
@@ -195,6 +197,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         localNotification.alertBody = "时间到了，该去购物了！"
         localNotification.alertAction = "View List"
         localNotification.category = "shoppingListReminderCategory"
+        UIApplication.sharedApplication().scheduleLocalNotification(localNotification)
     }
     
     
