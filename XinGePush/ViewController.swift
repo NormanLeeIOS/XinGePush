@@ -26,6 +26,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         datePicker.hidden = true
         
         loadShoppingList()
+        // 设置开启通知
+        setupNotificationSettings()
     }
 
     override func didReceiveMemoryWarning() {
@@ -138,48 +140,61 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func setupNotificationSettings() {
         // Specify the notification types.
+        let notificationSettings: UIUserNotificationSettings! = UIApplication.sharedApplication().currentUserNotificationSettings()
         
-        var notificationTypes: UIUserNotificationType = UIUserNotificationType.Alert | UIUserNotificationType.Sound
-        
-        // UIMutableUserNotification...iOS8 新引入的特性
-        
-        // 点击消失,app仍然在后台，只给几秒钟时间处理任务
-        var justInformation = UIMutableUserNotificationAction()
-        justInformation.identifier = "justInform"
-        justInformation.title = "OK, got it"
-        justInformation.activationMode = UIUserNotificationActivationMode.Background
-        justInformation.destructive = false
-        justInformation.authenticationRequired = false
-        
-        // 点击后添加一个物品
-        var modifyListAction = UIMutableUserNotificationAction()
-        modifyListAction.identifier = "editList"
-        modifyListAction.title = "Edit List"
-        modifyListAction.activationMode = UIUserNotificationActivationMode.Foreground
-        modifyListAction.destructive = false
-        modifyListAction.authenticationRequired = true
-        
-        // 点击后删除
-        var trashAction = UIMutableUserNotificationAction()
-        trashAction.identifier = "trashAction"
-        trashAction.title = "Delete List"
-        trashAction.activationMode = UIUserNotificationActivationMode.Background
-        trashAction.destructive = true
-        trashAction.authenticationRequired = false
-        
-        // 分类
-        let actionsArray = Array(arrayLiteral: justInformation, modifyListAction, trashAction)
-        let actionsArrayMinimal = Array(arrayLiteral: trashAction, modifyListAction)
-        
-        // 创建分类的category
-        var shoppingListReminderCategory = UIMutableUserNotificationCategory()
-        shoppingListReminderCategory.identifier = "ShoppingListReminderCategory"
-        shoppingListReminderCategory.setActions(actionsArray, forContext:UIUserNotificationActionContext.Default)
-        shoppingListReminderCategory.setActions(actionsArrayMinimal, forContext: UIUserNotificationActionContext.Minimal)
-        
-        // 注册设置
-        let categoriesForSettings = Set(arrayLiteral: shoppingListReminderCategory)
-        let newNotificationSettings = UIUserNotificationSettings(forTypes: notificationTypes, categories: categoriesForSettings)
+        if (notificationSettings.types == UIUserNotificationType.None) {
+            var notificationTypes: UIUserNotificationType = UIUserNotificationType.Alert | UIUserNotificationType.Sound
+            
+            // UIMutableUserNotification...iOS8 新引入的特性
+            
+            // 点击消失,app仍然在后台，只给几秒钟时间处理任务
+            var justInformation = UIMutableUserNotificationAction()
+            justInformation.identifier = "justInform"
+            justInformation.title = "OK, got it"
+            justInformation.activationMode = UIUserNotificationActivationMode.Background
+            justInformation.destructive = false
+            justInformation.authenticationRequired = false
+            
+            // 点击后添加一个物品
+            var modifyListAction = UIMutableUserNotificationAction()
+            modifyListAction.identifier = "editList"
+            modifyListAction.title = "Edit List"
+            modifyListAction.activationMode = UIUserNotificationActivationMode.Foreground
+            modifyListAction.destructive = false
+            modifyListAction.authenticationRequired = true
+            
+            // 点击后删除
+            var trashAction = UIMutableUserNotificationAction()
+            trashAction.identifier = "trashAction"
+            trashAction.title = "Delete List"
+            trashAction.activationMode = UIUserNotificationActivationMode.Background
+            trashAction.destructive = true
+            trashAction.authenticationRequired = false
+            
+            // 分类
+            let actionsArray = Array(arrayLiteral: justInformation, modifyListAction, trashAction)
+            let actionsArrayMinimal = Array(arrayLiteral: trashAction, modifyListAction)
+            
+            // 创建分类的category
+            var shoppingListReminderCategory = UIMutableUserNotificationCategory()
+            shoppingListReminderCategory.identifier = "ShoppingListReminderCategory"
+            shoppingListReminderCategory.setActions(actionsArray, forContext:UIUserNotificationActionContext.Default)
+            shoppingListReminderCategory.setActions(actionsArrayMinimal, forContext: UIUserNotificationActionContext.Minimal)
+            
+            // 注册设置
+            let categoriesForSettings = Set(arrayLiteral: shoppingListReminderCategory)
+            let newNotificationSettings = UIUserNotificationSettings(forTypes: notificationTypes, categories: categoriesForSettings)
+            UIApplication.sharedApplication().registerUserNotificationSettings(newNotificationSettings)
+        }
+    }
+    
+    func scheduleLocalNotification() {
+        // 本地推送设置
+        var localNotification = UILocalNotification()
+        localNotification.fireDate = datePicker.date
+        localNotification.alertBody = "时间到了，该去购物了！"
+        localNotification.alertAction = "View List"
+        localNotification.category = "shoppingListReminderCategory"
     }
     
     
