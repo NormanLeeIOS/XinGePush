@@ -130,8 +130,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     // MARK: - 接收到本地推送的消息进入回调
     func application(application: UIApplication, didReceiveLocalNotification notification: UILocalNotification) {
+        
+        // 以下是强交互部分
+        println("Received Local Notification:")
+        println(notification.alertBody)
+        
+        
+        // 以下是信鸽push部分
         // notification是发送推送时传入的字典信息
         XGPush.localNotificationAtFrontEnd(notification, userInfoKey: "clockID", userInfoValue: "myID")
+    }
+    
+    // MARK: - 强交互的本地通知代理
+    func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {
+        // 打印通知类型
+        println(notificationSettings.types.rawValue)
+    }
+    
+    func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forLocalNotification notification: UILocalNotification, completionHandler: () -> Void) {
+        if identifier == "editList" {
+            NSNotificationCenter.defaultCenter().postNotificationName("modifyListNotification", object: nil)
+        }
+        else if identifier == "trashAction" {
+            NSNotificationCenter.defaultCenter().postNotificationName("deleteListNotification", object: nil)
+        }
+        completionHandler()
     }
     
 

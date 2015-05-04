@@ -23,6 +23,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "handleModifyListNotification", name: "modifyListNotification", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "handleDeleteListNotification", name: "deleteListNotification", object: nil)
+        
+        self.tblShoppingList.delegate = self
+        
+        self.tblShoppingList.dataSource = self
+        
+        self.txtAddItem.delegate = self
+        
+        // UI
         datePicker.hidden = true
         
         loadShoppingList()
@@ -46,6 +56,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         txtAddItem.text = ""
         txtAddItem.resignFirstResponder()
+        saveShoppingList()
         
         return true
     }
@@ -139,65 +150,132 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         txtAddItem.enabled = !txtAddItem.enabled
     }
-    
     func setupNotificationSettings() {
-        // Specify the notification types.
         let notificationSettings: UIUserNotificationSettings! = UIApplication.sharedApplication().currentUserNotificationSettings()
         
-        if (notificationSettings.types == UIUserNotificationType.None) {
+        if (notificationSettings.types == UIUserNotificationType.None){
+            // Specify the notification types.
             var notificationTypes: UIUserNotificationType = UIUserNotificationType.Alert | UIUserNotificationType.Sound
             
-            // UIMutableUserNotification...iOS8 新引入的特性
             
-            // 点击消失,app仍然在后台，只给几秒钟时间处理任务
-            var justInformation = UIMutableUserNotificationAction()
-            justInformation.identifier = "justInform"
-            justInformation.title = "OK, got it"
-            justInformation.activationMode = UIUserNotificationActivationMode.Background
-            justInformation.destructive = false
-            justInformation.authenticationRequired = false
+            // Specify the notification actions.
+            var justInformAction = UIMutableUserNotificationAction()
+            justInformAction.identifier = "justInform"
+            justInformAction.title = "OK, got it"
+            justInformAction.activationMode = UIUserNotificationActivationMode.Background
+            justInformAction.destructive = false
+            justInformAction.authenticationRequired = false
             
-            // 点击后添加一个物品
             var modifyListAction = UIMutableUserNotificationAction()
             modifyListAction.identifier = "editList"
-            modifyListAction.title = "Edit List"
+            modifyListAction.title = "Edit list"
             modifyListAction.activationMode = UIUserNotificationActivationMode.Foreground
             modifyListAction.destructive = false
             modifyListAction.authenticationRequired = true
             
-            // 点击后删除
             var trashAction = UIMutableUserNotificationAction()
             trashAction.identifier = "trashAction"
-            trashAction.title = "Delete List"
+            trashAction.title = "Delete list"
             trashAction.activationMode = UIUserNotificationActivationMode.Background
             trashAction.destructive = true
             trashAction.authenticationRequired = false
             
-            // 分类
-            let actionsArray = Array(arrayLiteral: justInformation, modifyListAction, trashAction)
-            let actionsArrayMinimal = Array(arrayLiteral: trashAction, modifyListAction)
+            let actionsArray = NSArray(objects: justInformAction, modifyListAction, trashAction)
+            let actionsArrayMinimal = NSArray(objects: trashAction, modifyListAction)
             
-            // 创建分类的category
+            // Specify the category related to the above actions.
             var shoppingListReminderCategory = UIMutableUserNotificationCategory()
-            shoppingListReminderCategory.identifier = "ShoppingListReminderCategory"
-            shoppingListReminderCategory.setActions(actionsArray, forContext:UIUserNotificationActionContext.Default)
-            shoppingListReminderCategory.setActions(actionsArrayMinimal, forContext: UIUserNotificationActionContext.Minimal)
+            shoppingListReminderCategory.identifier = "shoppingListReminderCategory"
+            shoppingListReminderCategory.setActions(actionsArray as [AnyObject], forContext: UIUserNotificationActionContext.Default)
+            shoppingListReminderCategory.setActions(actionsArrayMinimal as [AnyObject], forContext: UIUserNotificationActionContext.Minimal)
             
-            // 注册设置
-            let categoriesForSettings = Set(arrayLiteral: shoppingListReminderCategory)
-            let newNotificationSettings = UIUserNotificationSettings(forTypes: notificationTypes, categories: categoriesForSettings)
+            
+            let categoriesForSettings = NSSet(objects: shoppingListReminderCategory)
+            
+            
+            // Register the notification settings.
+            let newNotificationSettings = UIUserNotificationSettings(forTypes: notificationTypes, categories: categoriesForSettings as Set<NSObject>)
             UIApplication.sharedApplication().registerUserNotificationSettings(newNotificationSettings)
         }
     }
     
+//    func setupNotificationSettings() {
+//        // Specify the notification types.
+//        let notificationSettings: UIUserNotificationSettings! = UIApplication.sharedApplication().currentUserNotificationSettings()
+//        
+//        if (notificationSettings.types == UIUserNotificationType.None) {
+//            var notificationTypes: UIUserNotificationType = UIUserNotificationType.Alert | UIUserNotificationType.Sound
+//            
+//            // UIMutableUserNotification...iOS8 新引入的特性
+//            
+//            // 点击消失,app仍然在后台，只给几秒钟时间处理任务
+//            var justInformation = UIMutableUserNotificationAction()
+//            justInformation.identifier = "justInform"
+//            justInformation.title = "OK, got it"
+//            justInformation.activationMode = UIUserNotificationActivationMode.Background
+//            justInformation.destructive = false
+//            justInformation.authenticationRequired = false
+//            
+//            // 点击后添加一个物品
+//            var modifyListAction = UIMutableUserNotificationAction()
+//            modifyListAction.identifier = "editList"
+//            modifyListAction.title = "Edit List"
+//            modifyListAction.activationMode = UIUserNotificationActivationMode.Foreground
+//            modifyListAction.destructive = false
+//            modifyListAction.authenticationRequired = true
+//            
+//            // 点击后删除
+//            var trashAction = UIMutableUserNotificationAction()
+//            trashAction.identifier = "trashAction"
+//            trashAction.title = "Delete List"
+//            trashAction.activationMode = UIUserNotificationActivationMode.Background
+//            trashAction.destructive = true
+//            trashAction.authenticationRequired = false
+//            
+//            // 分类
+//            let actionsArray = Array(arrayLiteral: justInformation, modifyListAction, trashAction)
+//            let actionsArrayMinimal = Array(arrayLiteral: trashAction, modifyListAction)
+//            
+//            // 创建分类的category
+//            var shoppingListReminderCategory = UIMutableUserNotificationCategory()
+//            shoppingListReminderCategory.identifier = "ShoppingListReminderCategory"
+//            shoppingListReminderCategory.setActions(actionsArray as [AnyObject], forContext:UIUserNotificationActionContext.Default)
+//            shoppingListReminderCategory.setActions(actionsArrayMinimal as [AnyObject], forContext: UIUserNotificationActionContext.Minimal)
+//            
+//            // 注册设置
+//            let categoriesForSettings = Set(arrayLiteral: shoppingListReminderCategory)
+//            let newNotificationSettings = UIUserNotificationSettings(forTypes: notificationTypes, categories: categoriesForSettings)
+//            UIApplication.sharedApplication().registerUserNotificationSettings(newNotificationSettings)
+//        }
+//    }
+    
     func scheduleLocalNotification() {
         // 本地推送设置
         var localNotification = UILocalNotification()
-        localNotification.fireDate = datePicker.date
+        localNotification.fireDate = fixNotificationDate(datePicker.date)
         localNotification.alertBody = "时间到了，该去购物了！"
-        localNotification.alertAction = "View List"
+        localNotification.alertAction = "查看清单"
         localNotification.category = "shoppingListReminderCategory"
         UIApplication.sharedApplication().scheduleLocalNotification(localNotification)
+    }
+    
+    func fixNotificationDate(dateToFix: NSDate) -> NSDate {
+        // 处理时间的秒位为0
+        var dateComponets: NSDateComponents = NSCalendar.currentCalendar().components(NSCalendarUnit.CalendarUnitDay | NSCalendarUnit.CalendarUnitMonth | NSCalendarUnit.CalendarUnitYear | NSCalendarUnit.CalendarUnitHour | NSCalendarUnit.CalendarUnitMinute, fromDate: dateToFix)
+        dateComponets.second = 0
+        var fixedDate: NSDate! = NSCalendar.currentCalendar().dateFromComponents(dateComponets)
+        return fixedDate
+    }
+    
+    // MARK: Notification Method
+    func handleModifyListNotification() {
+        txtAddItem.becomeFirstResponder()
+    }
+    
+    func handleDeleteListNotification() {
+        shoppingList.removeAllObjects()
+        saveShoppingList()
+        tblShoppingList.reloadData()
     }
     
     
